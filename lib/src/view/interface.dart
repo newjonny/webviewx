@@ -1,26 +1,20 @@
-library webviewx;
+import 'package:webviewx/src/utils/utils.dart';
+import 'package:webviewx/src/controller/interface.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-import 'src/utils/utils.dart';
-import 'src/controller/controller.dart';
-import 'src/view/view.dart';
-
-export 'src/utils/utils.dart';
-export 'src/controller/controller.dart';
-
-/// Top-level wrapper for WebViewX.
-/// Basically it's a layout builder that makes sure the webview can still render
-/// even if you don't provide a width and/or a height.
-class WebViewX extends StatelessWidget {
+/// Interface for widget
+abstract class IWebViewXWidget {
   /// Initial content
   final String initialContent;
 
   /// Initial source type. Must match [initialContent]'s type.
+  ///
+  /// Example:
+  /// If you set [initialContent] to '<p>hi</p>', then you should
+  /// also set the [initialSourceType] accordingly, that is [SourceType.HTML].
   final SourceType initialSourceType;
 
   /// User-agent
+  /// On web, this is only used when using [SourceType.URL_BYPASS]
   final String? userAgent;
 
   /// Widget width
@@ -29,7 +23,7 @@ class WebViewX extends StatelessWidget {
   /// Widget height
   final double? height;
 
-  /// Callback which returns a referrence to the [WebViewXController]
+  /// Callback which returns a referrence to the [IWebViewXController]
   /// being created.
   final Function(IWebViewXController controller)? onWebViewCreated;
 
@@ -81,8 +75,7 @@ class WebViewX extends StatelessWidget {
   final MobileSpecificParams mobileSpecificParams;
 
   /// Constructor
-  WebViewX({
-    Key? key,
+  IWebViewXWidget({
     this.initialContent = 'about:blank',
     this.initialSourceType = SourceType.URL,
     this.userAgent,
@@ -100,30 +93,5 @@ class WebViewX extends StatelessWidget {
     this.onWebResourceError,
     this.webSpecificParams = const WebSpecificParams(),
     this.mobileSpecificParams = const MobileSpecificParams(),
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => WebViewXWidget(
-        key: key,
-        initialContent: initialContent,
-        initialSourceType: initialSourceType,
-        userAgent: userAgent,
-        width: width ?? constraints.maxWidth,
-        height: height ?? constraints.maxHeight,
-        dartCallBacks: dartCallBacks,
-        jsContent: jsContent,
-        onWebViewCreated: onWebViewCreated,
-        ignoreAllGestures: ignoreAllGestures,
-        javascriptMode: javascriptMode,
-        initialMediaPlaybackPolicy: initialMediaPlaybackPolicy,
-        onPageStarted: onPageStarted,
-        onPageFinished: onPageFinished,
-        onWebResourceError: onWebResourceError,
-        webSpecificParams: webSpecificParams,
-        mobileSpecificParams: mobileSpecificParams,
-      ),
-    );
-  }
+  });
 }

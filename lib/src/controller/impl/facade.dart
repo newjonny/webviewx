@@ -4,24 +4,34 @@ import 'package:webviewx/src/utils/view_content_model.dart';
 import 'package:webviewx/src/utils/web_history.dart';
 import 'package:webviewx/src/utils/webview_content_model.dart';
 
+import '../interface.dart';
+
 /// Facade controller
 ///
 /// Throws UnimplementedError if used.
-class WebViewXController extends ValueNotifier<ViewContentModel> {
+class WebViewXController extends ValueNotifier<ViewContentModel>
+    implements IWebViewXController<dynamic> {
   /// Cross-platform webview connector
   ///
-  /// At runtime, this will be either of type WebViewController or JsObject
+  /// At runtime, this will be WebViewController, JsObject or other concrete
+  /// controller implementation
+  @override
   late dynamic connector;
 
   /// Boolean value notifier used to toggle ignoring gestures on the webview
+  @override
   ValueNotifier<bool> ignoreAllGesturesNotifier;
+
+  @override
+  bool printDebugInfo;
 
   /// Constructor
   WebViewXController({
     required String initialContent,
     required SourceType initialSourceType,
     required bool ignoreAllGestures,
-  })   : ignoreAllGesturesNotifier = ValueNotifier(ignoreAllGestures),
+    this.printDebugInfo = false,
+  })  : ignoreAllGesturesNotifier = ValueNotifier(ignoreAllGestures),
         super(
           ViewContentModel(
             content: initialContent,
@@ -30,14 +40,17 @@ class WebViewXController extends ValueNotifier<ViewContentModel> {
         );
 
   /// Returns true if the webview's current content is HTML
+  @override
   bool get isCurrentContentHTML => throw UnimplementedError();
 
   /// Returns true if the webview's current content is URL
+  @override
   bool get isCurrentContentURL => throw UnimplementedError();
 
   /// Returns true if the webview's current content is URL, and if
   /// [SourceType] is [SourceType.URL_BYPASS], which means it should
   /// use the bypass to fetch the web page content.
+  @override
   bool get isCurrentContentURLBypass => throw UnimplementedError();
 
   /// Set webview content to the specified URL.
@@ -46,18 +59,21 @@ class WebViewXController extends ValueNotifier<ViewContentModel> {
   /// If [fromAssets] param is set to true,
   /// [url] param must be a String path to an asset
   /// Example: 'assets/some_url.txt'
-  void loadContent(
+  @override
+  Future<void> loadContent(
     String content,
     SourceType sourceType, {
     Map<String, String> headers = const {},
     bool fromAssets = false,
-  }) async =>
+  }) =>
       throw UnimplementedError();
 
   /// Boolean getter which reveals if the gestures are ignored right now
+  @override
   bool get ignoringAllGestures => throw UnimplementedError();
 
   /// Function to set ignoring gestures
+  @override
   void setIgnoreAllGestures(bool value) => throw UnimplementedError();
 
   /// This function allows you to call Javascript functions defined inside the webview.
@@ -75,6 +91,7 @@ class WebViewXController extends ValueNotifier<ViewContentModel> {
   /// var resultFromJs = await callJsMethod('someFunction', ['test'])
   /// print(resultFromJs); // prints "This is a test"
   /// ```
+  @override
   Future<dynamic> callJsMethod(
     String name,
     List<dynamic> params,
@@ -88,6 +105,7 @@ class WebViewXController extends ValueNotifier<ViewContentModel> {
   /// in the 'window' context, instead of doing it inside the corresponding iframe's 'window'
   ///
   /// For more info, check Mozilla documentation on 'window'
+  @override
   Future<dynamic> evalRawJavascript(
     String rawJavascript, {
     bool inGlobalContext = false,
@@ -106,23 +124,29 @@ class WebViewXController extends ValueNotifier<ViewContentModel> {
   // void webAddHistory(HistoryEntry entry) => throw UnimplementedError();
 
   /// Returns the current content
+  @override
   Future<WebViewContent> getContent() => throw UnimplementedError();
 
   /// Returns a Future that completes with the value true, if you can go
   /// back in the history stack.
+  @override
   Future<bool> canGoBack() => throw UnimplementedError();
 
   /// Go back in the history stack.
+  @override
   Future<void> goBack() => throw UnimplementedError();
 
   /// Returns a Future that completes with the value true, if you can go
   /// forward in the history stack.
+  @override
   Future<bool> canGoForward() => throw UnimplementedError();
 
   /// Go forward in the history stack.
+  @override
   Future<void> goForward() => throw UnimplementedError();
 
   /// Reload the current content.
+  @override
   Future<void> reload() => throw UnimplementedError();
 
   /// Dispose resources

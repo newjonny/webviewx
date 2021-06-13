@@ -1,26 +1,28 @@
-library webviewx;
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'src/utils/utils.dart';
-import 'src/controller/controller.dart';
-import 'src/view/view.dart';
+import 'package:webviewx/src/controller/interface.dart';
+import 'package:webviewx/src/utils/utils.dart';
+import 'package:webviewx/src/view/impl/io/mobile.dart' as mobile;
 
-export 'src/utils/utils.dart';
-export 'src/controller/controller.dart';
-
-/// Top-level wrapper for WebViewX.
-/// Basically it's a layout builder that makes sure the webview can still render
-/// even if you don't provide a width and/or a height.
-class WebViewX extends StatelessWidget {
+/// IO implementation
+///
+/// This will build the correct widget for the current platform, if available.
+class WebViewXWidget extends StatefulWidget {
   /// Initial content
   final String initialContent;
 
   /// Initial source type. Must match [initialContent]'s type.
+  ///
+  /// Example:
+  /// If you set [initialContent] to '<p>hi</p>', then you should
+  /// also set the [initialSourceType] accordingly, that is [SourceType.HTML].
   final SourceType initialSourceType;
 
   /// User-agent
+  /// On web, this is only used when using [SourceType.URL_BYPASS]
   final String? userAgent;
 
   /// Widget width
@@ -81,7 +83,7 @@ class WebViewX extends StatelessWidget {
   final MobileSpecificParams mobileSpecificParams;
 
   /// Constructor
-  WebViewX({
+  WebViewXWidget({
     Key? key,
     this.initialContent = 'about:blank',
     this.initialSourceType = SourceType.URL,
@@ -103,27 +105,36 @@ class WebViewX extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _WebViewXWidgetState createState() => _WebViewXWidgetState();
+}
+
+class _WebViewXWidgetState extends State<WebViewXWidget> {
+  @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => WebViewXWidget(
-        key: key,
-        initialContent: initialContent,
-        initialSourceType: initialSourceType,
-        userAgent: userAgent,
-        width: width ?? constraints.maxWidth,
-        height: height ?? constraints.maxHeight,
-        dartCallBacks: dartCallBacks,
-        jsContent: jsContent,
-        onWebViewCreated: onWebViewCreated,
-        ignoreAllGestures: ignoreAllGestures,
-        javascriptMode: javascriptMode,
-        initialMediaPlaybackPolicy: initialMediaPlaybackPolicy,
-        onPageStarted: onPageStarted,
-        onPageFinished: onPageFinished,
-        onWebResourceError: onWebResourceError,
-        webSpecificParams: webSpecificParams,
-        mobileSpecificParams: mobileSpecificParams,
-      ),
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      return mobile.WebViewXWidget(
+        key: widget.key,
+        initialContent: widget.initialContent,
+        initialSourceType: widget.initialSourceType,
+        userAgent: widget.userAgent,
+        width: widget.width,
+        height: widget.height,
+        dartCallBacks: widget.dartCallBacks,
+        jsContent: widget.jsContent,
+        onWebViewCreated: widget.onWebViewCreated,
+        ignoreAllGestures: widget.ignoreAllGestures,
+        javascriptMode: widget.javascriptMode,
+        initialMediaPlaybackPolicy: widget.initialMediaPlaybackPolicy,
+        onPageStarted: widget.onPageStarted,
+        onPageFinished: widget.onPageFinished,
+        onWebResourceError: widget.onWebResourceError,
+        webSpecificParams: widget.webSpecificParams,
+        mobileSpecificParams: widget.mobileSpecificParams,
+      );
+    } else {
+      throw UnimplementedError(
+        'WebViewX (IO version) is not yet implemented for the current platform (${Platform.operatingSystem}).',
+      );
+    }
   }
 }

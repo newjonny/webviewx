@@ -15,7 +15,7 @@ class WebViewXPage extends StatefulWidget {
 }
 
 class _WebViewXPageState extends State<WebViewXPage> {
-  late WebViewXController webviewController;
+  late IWebViewXController webviewController;
   final initialContent =
       '<h4> This is some hardcoded HTML code embedded inside the webview <h4> <h2> Hello world! <h2>';
   final executeJsErrorMessage =
@@ -112,8 +112,7 @@ class _WebViewXPageState extends State<WebViewXPage> {
 
   void _callPlatformSpecificJsMethod() async {
     try {
-      await webviewController
-          .callJsMethod('testPlatformSpecificMethod', ['Hi']);
+      await webviewController.callJsMethod('testPlatformSpecificMethod', ['Hi']);
     } catch (e) {
       showAlertDialog(
         executeJsErrorMessage,
@@ -248,8 +247,7 @@ class _WebViewXPageState extends State<WebViewXPage> {
       ),
       buildSpace(direction: Axis.vertical, flex: false, amount: 20.0),
       createButton(
-        text:
-            'Change content to URL that allows iframes embedding (https://flutter.dev)',
+        text: 'Change content to URL that allows iframes embedding (https://flutter.dev)',
         onTap: _setUrl,
       ),
       buildSpace(direction: Axis.vertical, flex: false, amount: 20.0),
@@ -285,8 +283,7 @@ class _WebViewXPageState extends State<WebViewXPage> {
       ),
       buildSpace(direction: Axis.vertical, flex: false, amount: 20.0),
       createButton(
-        text:
-            'Call platform specific Js method, that calls back a Dart function',
+        text: 'Call platform specific Js method, that calls back a Dart function',
         onTap: _callPlatformSpecificJsMethod,
       ),
       buildSpace(direction: Axis.vertical, flex: false, amount: 20.0),

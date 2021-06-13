@@ -10,16 +10,20 @@ import 'dart:html' as html;
 import 'dart:js' as js;
 import 'package:webviewx/src/utils/dart_ui_fix.dart' as ui;
 
-import 'package:webviewx/src/controller/web.dart';
 import 'package:webviewx/src/utils/utils.dart';
 import 'package:webviewx/src/utils/view_content_model.dart';
 import 'package:webviewx/src/utils/web_history.dart';
 
-import '../utils/x_frame_options_bypass.dart';
+import 'package:webviewx/src/controller/impl/web.dart';
+
+import 'package:webviewx/src/controller/interface.dart';
+import 'package:webviewx/src/utils/x_frame_options_bypass.dart';
+import 'package:webviewx/src/view/interface.dart';
 
 /// Web implementation
-class WebViewXWidget extends StatefulWidget {
+class WebViewXWidget extends StatefulWidget implements IWebViewXWidget {
   /// Initial content
+  @override
   final String initialContent;
 
   /// Initial source type. Must match [initialContent]'s type.
@@ -27,21 +31,26 @@ class WebViewXWidget extends StatefulWidget {
   /// Example:
   /// If you set [initialContent] to '<p>hi</p>', then you should
   /// also set the [initialSourceType] accordingly, that is [SourceType.HTML].
+  @override
   final SourceType initialSourceType;
 
   /// User-agent
   /// On web, this is only used when using [SourceType.URL_BYPASS]
+  @override
   final String? userAgent;
 
   /// Widget width
+  @override
   final double? width;
 
   /// Widget height
+  @override
   final double? height;
 
   /// Callback which returns a referrence to the [WebViewXController]
   /// being created.
-  final Function(WebViewXController controller)? onWebViewCreated;
+  @override
+  final void Function(IWebViewXController controller)? onWebViewCreated;
 
   /// A set of [EmbeddedJsContent].
   ///
@@ -50,6 +59,7 @@ class WebViewXWidget extends StatefulWidget {
   /// using the controller.
   ///
   /// For more info, see [EmbeddedJsContent].
+  @override
   final Set<EmbeddedJsContent> jsContent;
 
   /// A set of [DartCallback].
@@ -57,37 +67,46 @@ class WebViewXWidget extends StatefulWidget {
   /// You can define Dart functions, which can be called from the JS side.
   ///
   /// For more info, see [DartCallback].
+  @override
   final Set<DartCallback> dartCallBacks;
 
   /// Boolean value to specify if should ignore all gestures that touch the webview.
   ///
   /// You can change this later from the controller.
+  @override
   final bool ignoreAllGestures;
 
   /// Boolean value to specify if Javascript execution should be allowed inside the webview
+  @override
   final JavascriptMode javascriptMode;
 
   /// This defines if media content(audio - video) should
   /// auto play when entering the page.
+  @override
   final AutoMediaPlaybackPolicy initialMediaPlaybackPolicy;
 
   /// Callback for when the page starts loading.
+  @override
   final void Function(String src)? onPageStarted;
 
   /// Callback for when the page has finished loading (i.e. is shown on screen).
+  @override
   final void Function(String src)? onPageFinished;
 
   /// Callback for when something goes wrong in while page or resources load.
+  @override
   final void Function(WebResourceError error)? onWebResourceError;
 
   /// Parameters specific to the web version.
   /// This may eventually be merged with [mobileSpecificParams],
   /// if all features become cross platform.
+  @override
   final WebSpecificParams webSpecificParams;
 
   /// Parameters specific to the web version.
   /// This may eventually be merged with [webSpecificParams],
   /// if all features become cross platform.
+  @override
   final MobileSpecificParams mobileSpecificParams;
 
   /// Constructor
@@ -183,8 +202,8 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       initialContent: widget.initialContent,
       initialSourceType: widget.initialSourceType,
       ignoreAllGestures: _ignoreAllGestures,
+      printDebugInfo: false,
     )
-      ..printDebugInfo = widget.webSpecificParams.printDebugInfo
       ..addListener(_handleChange)
       ..ignoreAllGesturesNotifier.addListener(
         _handleIgnoreGesturesChange,
@@ -340,8 +359,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       ..height = widget.height!.toInt().toString()
       ..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
 
-    widget.webSpecificParams.additionalSandboxOptions
-        .forEach(iframeElement.sandbox!.add);
+    widget.webSpecificParams.additionalSandboxOptions.forEach(iframeElement.sandbox!.add);
 
     if (widget.javascriptMode == JavascriptMode.unrestricted) {
       iframeElement.sandbox!.add('allow-scripts');
@@ -349,8 +367,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
 
     var allow = widget.webSpecificParams.additionalAllowOptions;
 
-    if (widget.initialMediaPlaybackPolicy ==
-        AutoMediaPlaybackPolicy.always_allow) {
+    if (widget.initialMediaPlaybackPolicy == AutoMediaPlaybackPolicy.always_allow) {
       allow.add('autoplay');
     }
 
@@ -444,10 +461,8 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
               headers[USER_AGENT_HEADERS_KEY] = widget.userAgent!;
             }
             var options = jsonEncode(headers);
-            var optionsIndicator =
-                '/[$BYPASS_URL_ADDITIONAL_OPTIONS_STARTING_POINT]';
-            var url =
-                source + optionsIndicator + base64Encode(utf8.encode(options));
+            var optionsIndicator = '/[$BYPASS_URL_ADDITIONAL_OPTIONS_STARTING_POINT]';
+            var url = source + optionsIndicator + base64Encode(utf8.encode(options));
 
             //TODO Issue: On web, this only works the first time being used. When the user clicks a link,
             // theese options are lost.
