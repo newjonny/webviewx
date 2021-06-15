@@ -275,10 +275,15 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       viewType: iframeViewType,
     );
 
-    Widget htmlElementView = Container(
-      width: widget.width,
-      height: widget.height,
-      child: _htmlElement(iframeViewType),
+    Widget htmlElementView = Column(
+      children: [
+        Text("owiefj"),
+        Container(
+          width: widget.width,
+          height: widget.height,
+          child: _htmlElement(iframeViewType),
+        ),
+      ]
     );
 
     return htmlElementView;
