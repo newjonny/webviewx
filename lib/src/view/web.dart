@@ -319,7 +319,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
 
   html.IFrameElement _createIFrame() {
     // ignore: unsafe_html
-    var xFrameBypassElement = html.Element.html(
+    /*var xFrameBypassElement = html.Element.html(
       '<iframe is="x-frame-bypass"></iframe>',
       validator: null,
       treeSanitizer: html.NodeTreeSanitizer.trusted,
@@ -347,7 +347,24 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       allow.add('autoplay');
     }
 
-    iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');
+    iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');*/
+    final IFrameElement _iframeElement = IFrameElement();
+    print(widget.height);
+    print(widget.width);
+    _iframeElement.height = widget.height.toString();
+    _iframeElement.width = widget.width.toString();
+    _iframeElement.style.border = 'none';
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(
+      'iframeElement',
+      (int viewId) => _iframeElement,
+    );
+
+    _iframeWidget = HtmlElementView(
+      key: UniqueKey(),
+      viewType: 'iframeElement',
+    );
 
     return iframeElement;
   }
