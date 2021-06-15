@@ -7,6 +7,8 @@ import 'package:webviewx/src/utils/constants.dart';
 
 import 'dart:async';
 import 'dart:html' as html;
+import 'dart:ui' as ui;
+import 'dart:html';
 import 'dart:js' as js;
 import 'package:webviewx/src/utils/dart_ui_fix.dart' as ui;
 
@@ -279,7 +281,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       children: [
         Text("owiefj"),
         Container(
-          width: widget.width*2,
+          width: widget.width,
           height: widget.height,
           child: _htmlElement(iframeViewType),
         ),
@@ -371,7 +373,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       viewType: 'iframeElement',
     );
 
-    return iframeElement;
+    return _iframeElement;
   }
 
   /* Maybe can be useful
