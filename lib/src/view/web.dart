@@ -275,7 +275,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       viewType: iframeViewType,
     );
 
-    Widget htmlElementView = SizedBox(
+    Widget htmlElementView = Container(
       width: widget.width,
       height: widget.height,
       child: _htmlElement(iframeViewType),
