@@ -8,7 +8,6 @@ import 'package:webviewx/src/utils/constants.dart';
 import 'dart:async';
 import 'dart:html' as html;
 import 'dart:ui' as ui;
-import 'dart:html';
 import 'dart:js' as js;
 import 'package:webviewx/src/utils/dart_ui_fix.dart' as ui;
 
@@ -355,7 +354,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
     }
 
     iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');*/
-    final IFrameElement _iframeElement = IFrameElement();
+    final html.IFrameElement _iframeElement = html.IFrameElement();
     print(widget.height);
     print(widget.width);
     _iframeElement.height = widget.height.toString();
@@ -368,10 +367,10 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       (int viewId) => _iframeElement,
     );
 
-    _iframeWidget = HtmlElementView(
+    /*_iframeWidget = HtmlElementView(
       key: UniqueKey(),
       viewType: 'iframeElement',
-    );
+    );*/
 
     return _iframeElement;
   }
