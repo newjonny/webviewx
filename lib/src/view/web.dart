@@ -287,7 +287,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       ]
     );*/
     
-    htmlElementView = _htmlElement(iframeViewType);
+    Widget htmlElementView = _htmlElement(iframeViewType);
 
     return htmlElementView;
   }
