@@ -306,13 +306,9 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
   }
 
   Widget _htmlElement(String iframeViewType) {
-    return AbsorbPointer(
-      child: RepaintBoundary(
-        child: HtmlElementView(
+    return HtmlElementView(
           key: widget.key,
           viewType: iframeViewType,
-        ),
-      ),
     );
   }
 
