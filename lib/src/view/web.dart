@@ -276,7 +276,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       viewType: iframeViewType,
     );
 
-    Widget htmlElementView = Column(
+    /*Widget htmlElementView = Column(
       children: [
         Text("owiefj"),
         Container(
@@ -285,7 +285,9 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
           child: _htmlElement(iframeViewType),
         ),
       ]
-    );
+    );*/
+    
+    htmlElementView = _htmlElement(iframeViewType);
 
     return htmlElementView;
   }
