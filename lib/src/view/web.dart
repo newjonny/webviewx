@@ -281,10 +281,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       child: _htmlElement(iframeViewType),
     );
 
-    return _iframeIgnorePointer(
-      child: htmlElementView,
-      ignoring: _ignoreAllGestures,
-    );
+    return htmlElementView;
   }
 
   Widget _iframeIgnorePointer({required Widget child, bool ignoring = false}) {
