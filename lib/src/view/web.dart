@@ -308,7 +308,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
   Widget _htmlElement(String iframeViewType) {
     return HtmlElementView(
           key: widget.key,
-          viewType: iframeViewType,
+          viewType: 'iframeElement',
     );
   }
 
@@ -330,8 +330,8 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       ..name = 'name_$iframeViewType'
       ..style.border = 'none'
       ..width = widget.width!.toInt().toString()
-      ..height = widget.height!.toInt().toString()
-      ..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
+      ..height = widget.height!.toInt().toString();
+      //..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
 
     widget.webSpecificParams.additionalSandboxOptions
         .forEach(iframeElement.sandbox!.add);
