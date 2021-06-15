@@ -279,7 +279,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
       children: [
         Text("owiefj"),
         Container(
-          width: widget.width,
+          width: widget.width*2,
           height: widget.height,
           child: _htmlElement(iframeViewType),
         ),
