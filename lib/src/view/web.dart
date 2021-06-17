@@ -15,6 +15,7 @@ import 'package:webviewx/src/controller/web.dart';
 import 'package:webviewx/src/utils/utils.dart';
 import 'package:webviewx/src/utils/view_content_model.dart';
 import 'package:webviewx/src/utils/web_history.dart';
+import 'package:browser_detector/browser_detector.dart';
 
 import '../utils/x_frame_options_bypass.dart';
 
@@ -326,48 +327,53 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
   }
 
   html.IFrameElement _createIFrame() {
+    BrowserDetector bd = BrowserDetector();
     // ignore: unsafe_html
-    /*var xFrameBypassElement = html.Element.html(
-      '<iframe is="x-frame-bypass"></iframe>',
-      validator: null,
-      treeSanitizer: html.NodeTreeSanitizer.trusted,
-    ) as html.IFrameElement;
+    if (bd.platform.isAndroid) {
+      var xFrameBypassElement = html.Element.html(
+        '<iframe is="x-frame-bypass"></iframe>',
+        validator: null,
+        treeSanitizer: html.NodeTreeSanitizer.trusted,
+      ) as html.IFrameElement;
 
-    var iframeElement = xFrameBypassElement
-      ..id = 'id_$iframeViewType'
-      ..name = 'name_$iframeViewType'
-      ..style.border = 'none'
-      ..width = widget.width!.toInt().toString()
-      ..height = widget.height!.toInt().toString();
-      //..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
+      var _iframeElement = xFrameBypassElement
+        ..id = 'id_$iframeViewType'
+        ..name = 'name_$iframeViewType'
+        ..style.border = 'none'
+        ..width = widget.width!.toInt().toString()
+        ..height = widget.height!.toInt().toString();
+        //..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
 
-    widget.webSpecificParams.additionalSandboxOptions
-        .forEach(iframeElement.sandbox!.add);
+      widget.webSpecificParams.additionalSandboxOptions
+          .forEach(_iframeElement.sandbox!.add);
 
-    if (widget.javascriptMode == JavascriptMode.unrestricted) {
-      iframeElement.sandbox!.add('allow-scripts');
+      if (widget.javascriptMode == JavascriptMode.unrestricted) {
+        _iframeElement.sandbox!.add('allow-scripts');
+      }
+
+      var allow = widget.webSpecificParams.additionalAllowOptions;
+
+      if (widget.initialMediaPlaybackPolicy ==
+          AutoMediaPlaybackPolicy.always_allow) {
+        allow.add('autoplay');
+      }
+    } else {
+      iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');*/
+      final html.IFrameElement _iframeElement = html.IFrameElement();
+      print(widget.height);
+      print(widget.width);
+      _iframeElement.height = widget.height.toString();
+      _iframeElement.width = widget.width.toString();
+      _iframeElement.style.border = 'none';
+
+      // ignore: undefined_prefixed_name
+      ui.platformViewRegistry.registerViewFactory(
+        'iframeElement',
+        (int viewId) => _iframeElement,
+      );
+
     }
-
-    var allow = widget.webSpecificParams.additionalAllowOptions;
-
-    if (widget.initialMediaPlaybackPolicy ==
-        AutoMediaPlaybackPolicy.always_allow) {
-      allow.add('autoplay');
-    }
-
-    iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');*/
-    final html.IFrameElement _iframeElement = html.IFrameElement();
-    print(widget.height);
-    print(widget.width);
-    _iframeElement.height = widget.height.toString();
-    _iframeElement.width = widget.width.toString();
-    _iframeElement.style.border = 'none';
-
-    // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory(
-      'iframeElement',
-      (int viewId) => _iframeElement,
-    );
+    
 
     /*_iframeWidget = HtmlElementView(
       key: UniqueKey(),
