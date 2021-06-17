@@ -287,7 +287,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
         ),
       ]
     );*/
-    
+
     Widget htmlElementView = _htmlElement(iframeViewType);
 
     return htmlElementView;
@@ -316,8 +316,8 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
 
   Widget _htmlElement(String iframeViewType) {
     return HtmlElementView(
-          key: widget.key,
-          viewType: 'iframeElement',
+      key: widget.key,
+      viewType: 'iframeElement',
     );
   }
 
@@ -327,6 +327,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
   }
 
   html.IFrameElement _createIFrame() {
+    html.IFrameElement _iframeElement;
     BrowserDetector bd = BrowserDetector();
     // ignore: unsafe_html
     if (bd.platform.isAndroid) {
@@ -336,13 +337,13 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
         treeSanitizer: html.NodeTreeSanitizer.trusted,
       ) as html.IFrameElement;
 
-      var _iframeElement = xFrameBypassElement
+      _iframeElement = xFrameBypassElement
         ..id = 'id_$iframeViewType'
         ..name = 'name_$iframeViewType'
         ..style.border = 'none'
         ..width = widget.width!.toInt().toString()
         ..height = widget.height!.toInt().toString();
-        //..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
+      //..allowFullscreen = widget.webSpecificParams.webAllowFullscreenContent;
 
       widget.webSpecificParams.additionalSandboxOptions
           .forEach(_iframeElement.sandbox!.add);
@@ -357,9 +358,9 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
           AutoMediaPlaybackPolicy.always_allow) {
         allow.add('autoplay');
       }
+      _iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');
     } else {
-      iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');*/
-      final html.IFrameElement _iframeElement = html.IFrameElement();
+      _iframeElement = html.IFrameElement();
       print(widget.height);
       print(widget.width);
       _iframeElement.height = widget.height.toString();
@@ -371,9 +372,7 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
         'iframeElement',
         (int viewId) => _iframeElement,
       );
-
     }
-    
 
     /*_iframeWidget = HtmlElementView(
       key: UniqueKey(),
