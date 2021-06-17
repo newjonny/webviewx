@@ -276,19 +276,18 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
     _registerView(
       viewType: iframeViewType,
     );
-
-    /*Widget htmlElementView = Column(
-      children: [
-        Text("owiefj"),
-        Container(
-          width: widget.width,
-          height: widget.height,
-          child: _htmlElement(iframeViewType),
-        ),
-      ]
-    );*/
-
-    Widget htmlElementView = _htmlElement(iframeViewType);
+    BrowserDetector bd = BrowserDetector();
+    Widget htmlElementView;
+    // ignore: unsafe_html
+    if (bd.platform.isAndroid) {
+      htmlElementView = SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: _htmlElement(iframeViewType),
+      );
+    } else {
+      htmlElementView = _htmlElement(iframeViewType);
+    }
 
     return htmlElementView;
   }
@@ -315,10 +314,22 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
   }
 
   Widget _htmlElement(String iframeViewType) {
-    return HtmlElementView(
-      key: widget.key,
-      viewType: 'iframeElement',
-    );
+    BrowserDetector bd = BrowserDetector();
+    if (bd.platform.isAndroid) {
+      return AbsorbPointer(
+        child: RepaintBoundary(
+          child: HtmlElementView(
+            key: widget.key,
+            viewType: iframeViewType,
+          ),
+        ),
+      );
+    } else {
+      return HtmlElementView(
+        key: widget.key,
+        viewType: 'iframeElement',
+      );
+    }
   }
 
   // This creates a unique String to be used as the view type of the HtmlElementView
@@ -359,6 +370,9 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
         allow.add('autoplay');
       }
       _iframeElement.allow = allow.reduce((curr, next) => '$curr; $next');
+
+      //var _iframeWidget =
+      //    HtmlElementView(key: UniqueKey(), viewType: 'iframeElement');
     } else {
       _iframeElement = html.IFrameElement();
       print(widget.height);
@@ -373,11 +387,6 @@ class _WebViewXWidgetState extends State<WebViewXWidget> {
         (int viewId) => _iframeElement,
       );
     }
-
-    /*_iframeWidget = HtmlElementView(
-      key: UniqueKey(),
-      viewType: 'iframeElement',
-    );*/
 
     return _iframeElement;
   }
